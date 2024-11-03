@@ -9,8 +9,9 @@ ctk.set_appearance_mode("system")
 
 # Initialize main window
 root = ctk.CTk()
-root.title("YouTube Video Downloader")
+root.title("ITube - YouTube Video Downloader")
 root.geometry("1280x720")
+root.iconbitmap("./logo.ico")
 
 # Centering Frame
 center_frame = ctk.CTkFrame(master=root, fg_color="transparent")
@@ -76,7 +77,7 @@ progress.pack(pady=20)
 percentage_label = ctk.CTkLabel(
     master=center_frame,
     text="",
-    text_color="#FFFFFF"
+    text_color="#000000"
 )
 percentage_label.pack()
 
@@ -159,8 +160,8 @@ def on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
     progress.set(bytes_downloaded / total_size)
-    percentage_label.config(text=f"{int((bytes_downloaded / total_size) * 100)}%")  # Update percentage label
-    root.update_idletasks()
+    percentage_label.configure(text=f"{int((bytes_downloaded / total_size) * 100)}%")  # Update percentage label
+    root.after(0)
 
 # Download Button
 download_button = ctk.CTkButton(
