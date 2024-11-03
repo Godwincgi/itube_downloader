@@ -4,14 +4,25 @@ import customtkinter as ctk
 from pytubefix import YouTube
 import threading
 import re
+import os, sys
 
 ctk.set_appearance_mode("system")
+
+def resource_path(relative_path):
+    #Get absolute path to resource, works for pyinstaller
+
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 # Initialize main window
 root = ctk.CTk()
 root.title("ITube - YouTube Video Downloader")
 root.geometry("1280x720")
-root.iconbitmap("./logo.ico")
+root.iconbitmap(resource_path("logo.ico"))
 
 # Centering Frame
 center_frame = ctk.CTkFrame(master=root, fg_color="transparent")
