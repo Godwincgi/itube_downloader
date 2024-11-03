@@ -1,33 +1,83 @@
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+import tkinter
+from tkinter import messagebox, filedialog
+import customtkinter as ctk
 from pytubefix import YouTube
 import threading
 import re
 
+ctk.set_appearance_mode("system")
+
 # Initialize main window
-root = tk.Tk()
+root = ctk.CTk()
 root.title("YouTube Video Downloader")
-root.geometry("500x400")
-root.config(bg="#2E2E2E")
+root.geometry("1280x720")
+
+# Centering Frame
+center_frame = ctk.CTkFrame(master=root, fg_color="transparent")
+center_frame.pack(expand=True)
 
 # YouTube URL Entry
-tk.Label(root, text="Enter YouTube URL:", bg="#2E2E2E", fg="white").pack(pady=10)
-url_entry = tk.Entry(root, width=50)
+ctk.CTkLabel(
+    master=center_frame,
+    text="Enter YouTube URL:",
+    font=("Arial", 20),
+    pady=5,
+    padx=5
+).pack(pady=10)
+
+url_entry = ctk.CTkEntry(
+    master=center_frame,
+    width=800,
+    corner_radius=5,
+    placeholder_text="Paste YouTube Link Here",
+    border_color="#07F036",
+    border_width=1
+)
 url_entry.pack(pady=5)
 
 # Resolution Dropdown
-tk.Label(root, text="Select Resolution:", bg="#2E2E2E", fg="white").pack(pady=10)
-resolution_var = tk.StringVar(value="Highest")
-resolution_dropdown = ttk.Combobox(root, textvariable=resolution_var)
-resolution_dropdown['values'] = ["Highest", "720p", "480p", "360p", "Audio Only"]
-resolution_dropdown.pack(pady=5)
+ctk.CTkLabel(
+    master=center_frame,
+    text="Select Resolution:",
+    font=("Arial", 16),
+    pady=5,
+    padx=5
+).pack(pady=10)
+
+resolution_var = ctk.StringVar(value="Highest")
+resolution_dropdown = ctk.CTkComboBox(
+    master=center_frame,
+    values=["Highest", "720p", "480p", "360p", "Audio Only"],
+    dropdown_fg_color="#FFFFFF",
+    dropdown_hover_color="#19fc47",
+    border_width=1,
+    border_color="#07F036",
+    button_color="#07F036",
+    button_hover_color="#19fc47",
+    variable=resolution_var
+)
+resolution_dropdown.pack(pady=2)
+resolution_var.set("Highest")
 
 # Progress Bar
-progress = ttk.Progressbar(root, length=400, mode="determinate")
+progress = ctk.CTkProgressBar(
+    master=center_frame,
+    width=800,
+    mode="determinate",
+    height=30,
+    fg_color="#FFFFFF",
+    progress_color="#07F036",
+    determinate_speed=2
+)
+progress.set(0)
 progress.pack(pady=20)
 
 # Percentage Label
-percentage_label = tk.Label(root, text="0%", bg="#2E2E2E", fg="white")
+percentage_label = ctk.CTkLabel(
+    master=center_frame,
+    text="",
+    text_color="#FFFFFF"
+)
 percentage_label.pack()
 
 # Folder Selection
@@ -36,9 +86,23 @@ def choose_folder():
     if folder:
         folder_path.set(folder)
 
-folder_path = tk.StringVar()
-tk.Button(root, text="Choose Download Folder", command=choose_folder).pack(pady=10)
-tk.Label(root, textvariable=folder_path, bg="#2E2E2E", fg="white").pack()
+folder_path = ctk.StringVar()
+ctk.CTkButton(
+    master=center_frame,
+    text="Choose Download Folder",
+    width=200,
+    height=40,
+    command=choose_folder,
+    fg_color="#07F036",
+    text_color="#FFFFFF",
+    font=("Arial", 18),
+    hover_color="#19fc47"
+).pack(pady=10)
+
+ctk.CTkLabel(
+    master=center_frame,
+    textvariable=folder_path,
+).pack()
 
 # Function to normalize YouTube URLs
 def normalize_youtube_url(url):
@@ -94,12 +158,22 @@ def download_video():
 def on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
-    progress["value"] = (bytes_downloaded / total_size) * 100
+    progress.set(bytes_downloaded / total_size)
     percentage_label.config(text=f"{int((bytes_downloaded / total_size) * 100)}%")  # Update percentage label
     root.update_idletasks()
 
 # Download Button
-download_button = tk.Button(root, text="Download", command=download_video, bg="#4CAF50", fg="white")
+download_button = ctk.CTkButton(
+    master=center_frame,
+    text="Download",
+    command=download_video,
+    width=200,
+    height=40,
+    fg_color="#07F036",
+    text_color="#FFFFFF",
+    font=("Arial", 18),
+    hover_color="#19fc47"
+)
 download_button.pack(pady=20)
 
 root.mainloop()
